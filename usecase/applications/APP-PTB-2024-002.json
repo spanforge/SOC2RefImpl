@@ -1,0 +1,29 @@
+{
+  "application_id": "APP-PTB-2024-002",
+  "applicant_name": "Carlos Mendez",
+  "loan_type": "Small Business Loan",
+  "loan_amount": 180000,
+  "submission_date": "2024-11-06",
+  "branch": "South Boulevard",
+  "scenario": "pii_redaction",
+  "description": "Self-employed contractor — documents contain email address and phone number (non-critical PII). Pipeline anonymises and continues.",
+  "documents": [
+    "CONTRACTOR INCOME VERIFICATION\nApplicant: Carlos Mendez\nBusiness Name: Mendez Digital Consulting LLC\nContact: carlos.mendez@mendezdigital.com | (704) 553-2901\nFederal EIN: 83-4521076\n\nYear-to-Date Income (Jan–Oct 2024): $198,420\nProjected Annual Income 2024: $238,104\nPrior Year Income 2023 (IRS Schedule C Line 31): $211,500\nPrior Year Income 2022 (IRS Schedule C Line 31): $185,000\n\nAverage 2-Year Income: $198,250\nBank: Pinnacle Trust Bank — Business Checking #**** 4412\n\nNote: All income is from active consulting contracts. Three active contracts totalling $22,500/month as of November 2024. Copies of contracts available upon request. For questions, reach out directly to carlos.mendez@mendezdigital.com or call (704) 553-2901.",
+    "BUSINESS BANK STATEMENT SUMMARY\nPinnacle Trust Bank — Business Checking\nAccount Ending: 4412\nStatement Period: October 1–31, 2024\n\nOpening Balance: $34,211.00\nTotal Deposits: $22,500.00\nTotal Withdrawals: $8,920.00\nClosing Balance: $47,791.00\n\nLargest deposit: $12,500 (wire from Apex Infrastructure Partners — consulting retainer)\nLargest withdrawal: $3,200 (payroll — part-time bookkeeper)\nNo overdrafts. No NSF fees. Average daily balance: $41,033.00"
+  ],
+  "llm_config": {
+    "response": "Carlos Mendez operates Mendez Digital Consulting LLC with consistent self-employment income. IRS Schedule C shows $211,500 (2023) and $185,000 (2022), yielding a two-year average of $198,250. YTD 2024 income of $198,420 already surpasses the prior-year average — a positive trend. Three active contracts provide $22,500 per month in forward revenue visibility. Business bank account reflects a closing balance of $47,791 with no overdrafts or NSF items. Monthly qualifying income of $16,521 comfortably supports the $180,000 business loan request. Recommendation: APPROVE — self-employment income documentation is complete; credit bureau pull recommended before closing.",
+    "confidence": 0.87,
+    "latency_ms": 0.0
+  },
+  "expected_soc2": {
+    "CC6.1": "TRACED",
+    "CC6.6": "PII_REDACTED",
+    "CC6.8": "NO_SECRET",
+    "CC7.2": "NO_BREACH",
+    "CC7.4_routed": false,
+    "CC9.2": "CHAIN_OK",
+    "A1.2": "RECORDED",
+    "outcome": "success"
+  }
+}

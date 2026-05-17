@@ -1,0 +1,43 @@
+{
+  "id": "pii_redaction",
+  "description": "Documents contain non-critical PII (email, phone). PII is redacted; pipeline continues normally.",
+  "tsc_criteria": ["CC6.6"],
+  "application_id": "APP-2024-002",
+  "applicant_name": "Jennifer Okafor",
+  "documents": [
+    "Primary contact: jennifer.okafor@gmail.com, mobile 415-555-0192.\nOccupation: Radiologist, St. Helens Medical Center.\nAnnual compensation: $310,000.",
+    "Co-borrower: David Okafor, contact david.okafor@outlook.com, 415-555-0198.\nOccupation: Orthodontist, private practice.\nAnnual compensation: $275,000."
+  ],
+  "llm_mock": {
+    "response": "Dual-income household with combined annual compensation of $585,000. Both applicants are licensed medical professionals with stable, high-demand occupations. Requested loan of $920,000 represents a conservative 4x income multiple. Strong approval candidate; no conditions required.",
+    "confidence": 0.94,
+    "latency_ms": 0.0
+  },
+  "pii_mock": [
+    {
+      "detected": true,
+      "entities": ["EMAIL_ADDRESS", "PHONE_NUMBER"],
+      "anonymized_text": "Primary contact: <EMAIL_ADDRESS>, mobile <PHONE_NUMBER>.\nOccupation: Radiologist, St. Helens Medical Center.\nAnnual compensation: $310,000."
+    },
+    {
+      "detected": true,
+      "entities": ["EMAIL_ADDRESS", "PHONE_NUMBER"],
+      "anonymized_text": "Co-borrower: David Okafor, contact <EMAIL_ADDRESS>, <PHONE_NUMBER>.\nOccupation: Orthodontist, private practice.\nAnnual compensation: $275,000."
+    }
+  ],
+  "secrets_mock": {
+    "detected": false,
+    "secret_types": [],
+    "auto_blocked": false,
+    "redacted_text": null
+  },
+  "gate_mock": { "verdict": "PASS" },
+  "drift_mock": { "breach_metrics": [] },
+  "expected": {
+    "exception": null,
+    "routed_to_human": false,
+    "drift_breach": false,
+    "status": "success",
+    "pii_entity_types_detected": ["EMAIL_ADDRESS", "PHONE_NUMBER"]
+  }
+}

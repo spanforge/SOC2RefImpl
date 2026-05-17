@@ -1,0 +1,32 @@
+{
+  "_comment": "Pinnacle Trust Bank — fictitious regional bank using the SOC2 Reference Implementation",
+  "bank_name": "Pinnacle Trust Bank",
+  "bank_id": "PTB",
+  "founded": 1978,
+  "headquarters": "Charlotte, NC",
+  "tagline": "Your future, secured.",
+  "loan_products": [
+    "30-Year Fixed Mortgage",
+    "15-Year Fixed Mortgage",
+    "Home Equity Loan",
+    "Small Business Loan",
+    "Jumbo Mortgage",
+    "Auto Loan",
+    "Personal Loan"
+  ],
+  "ai_system": {
+    "name": "LoanAssist AI",
+    "version": "2.0",
+    "purpose": "Automated loan application summarisation and underwriting recommendation",
+    "compliance_framework": "SOC 2 Type II — TSC CC6.1, CC6.6, CC6.8, CC7.2, CC7.4, CC9.2, A1.2",
+    "project_id": "pinnacle-trust-loan-assist",
+    "confidence_threshold": 0.82,
+    "escalation_queue": "senior-underwriter-review",
+    "drift_z_threshold": 3.0
+  },
+  "compliance_contacts": {
+    "chief_compliance_officer": "Patricia Langford",
+    "information_security_officer": "Dominic Rourke",
+    "internal_audit_lead": "Mei Lin Zhao"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "application_id": "APP-PTB-2024-001",
+  "applicant_name": "Emily Hartwell",
+  "loan_type": "30-Year Fixed Mortgage",
+  "loan_amount": 450000,
+  "submission_date": "2024-11-04",
+  "branch": "Uptown Charlotte",
+  "scenario": "clean",
+  "description": "Salaried senior engineer — strong credit profile, clean documents, expected approval.",
+  "documents": [
+    "EMPLOYMENT VERIFICATION LETTER\nPinnacle Trust Bank — Loan Application Support\nDate: November 1, 2024\n\nTo Whom It May Concern:\n\nThis letter confirms that Emily Hartwell has been employed full-time at NovaTech Solutions Inc. as a Senior Software Engineer since March 2019. Her current base salary is $162,000 per annum. Ms. Hartwell is a permanent employee in good standing with no disciplinary history.\n\nHR Director\nNovaTech Solutions Inc.",
+    "PERSONAL FINANCIAL STATEMENT\nApplicant: Emily Hartwell\nDate Prepared: October 28, 2024\n\nMonthly Gross Income: $13,500\nMonthly Housing Expense (current rent): $2,200\nMonthly Car Payment: $480\nMonthly Student Loan: $310\nOther Monthly Obligations: $0\n\nTotal Monthly Debt: $790\nDebt-to-Income Ratio (excluding housing): 5.85%\nCredit Score (Equifax): 791\nCredit Score (TransUnion): 786\n\nSavings Balance (Pinnacle Trust Bank checking/savings): $87,430\nDownpayment Available: $92,000 (20.4% of requested loan + purchase price)\nProperty Address: 4812 Magnolia Terrace, Charlotte NC 28211\nPurchase Price: $542,000\nLoan Requested: $450,000"
+  ],
+  "llm_config": {
+    "response": "Emily Hartwell presents a strong financial profile for the $450,000 30-year mortgage. Annual income of $162,000 yields a monthly gross of $13,500. Pre-housing DTI is 5.85%; projected PITI of $2,650 per month brings total DTI to 25.5%, well within guidelines. Credit scores of 791 and 786 reflect excellent credit management. The 20.4% down payment eliminates PMI and demonstrates ample reserves of $87,430. Over five years at NovaTech Solutions confirms income stability. Recommendation: APPROVE — all standard underwriting criteria satisfied. No exceptions required.",
+    "confidence": 0.94,
+    "latency_ms": 0.0
+  },
+  "expected_soc2": {
+    "CC6.1": "TRACED",
+    "CC6.6": "NONE",
+    "CC6.8": "NO_SECRET",
+    "CC7.2": "NO_BREACH",
+    "CC7.4_routed": false,
+    "CC9.2": "CHAIN_OK",
+    "A1.2": "RECORDED",
+    "outcome": "success"
+  }
+}

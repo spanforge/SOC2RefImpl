@@ -1,0 +1,31 @@
+{
+  "application_id": "APP-PTB-2024-004",
+  "applicant_name": "Winston Nganga",
+  "loan_type": "Jumbo Mortgage",
+  "loan_amount": 1200000,
+  "submission_date": "2024-11-12",
+  "branch": "Ballantyne",
+  "scenario": "low_confidence_hitl",
+  "description": "Complex multi-entity income structure (salary + RSUs + rental income + foreign dividends). LLM confidence falls below 0.82 threshold — gate routes to senior underwriter (CC7.4).",
+  "documents": [
+    "INCOME SUMMARY — WINSTON NGANGA\nLoan Amount Requested: $1,200,000 (Jumbo)\n\nIncome Sources:\n1. W-2 Base Salary — Meridian Capital Advisors LLC: $320,000/yr\n2. Annual Cash Bonus (variable): $80,000–$180,000 (3-year avg: $127,000)\n3. RSU Vesting Schedule — Meridian Capital: 2,500 shares/yr at $48.20/share = $120,500/yr\n4. Rental Income — 14 Briar Ridge Dr, Huntersville: $3,200/month gross, $2,800 net after expenses\n5. Foreign Dividend Income — Lagos Property Trust (Nigerian REIT): approx. $18,000 USD equivalent/yr (currency-adjusted, pre-tax)\n\nTotal Estimated Annual Qualifying Income: $552,100 (conservative) to $621,600 (optimistic)\nMonthly Qualifying Income (conservative): $46,008",
+    "ASSET VERIFICATION\nApplicant: Winston Nganga\n\nLiquid Assets:\n- Pinnacle Trust Savings: $248,300\n- Fidelity Brokerage (Meridian RSU vested shares, unrestricted): $387,000 market value\n- 401(k) — Meridian Capital: $512,000 (60-day seasoning confirmed)\n\nDown Payment: $240,000 (20% of $1,200,000 purchase price)\nProperty Under Contract: 4501 Ballantyne Commons Pkwy, Charlotte NC 28277\nPurchase Price: $1,440,000\nProperty Type: Single-family, primary residence\n\nNote: Foreign dividend income requires currency risk assessment and tax documentation review. RSU vesting is subject to continued employment.",
+    "CREDIT AND LIABILITIES\nCredit Score (Experian): 768\nActive Tradelines: 6 (2 credit cards, 1 auto, 2 investment margin accounts, 1 student loan)\nStudent Loan Balance: $41,200 (IBR plan, $0 qualifying payment)\nAuto Loan: $820/month\nCredit Card Balances: $12,400 across 2 cards (utilisation 18%)\nNo collections. No late payments in 84 months."
+  ],
+  "llm_config": {
+    "response": "Winston Nganga's profile combines a strong $320,000 base W-2 salary with three variable income streams that introduce meaningful uncertainty: discretionary bonuses averaging $127,000 (cannot be guaranteed), RSU vesting at $120,500 per year (subject to continued employment), and foreign dividend income from a Nigerian REIT requiring IRS documentation not yet on file. Rental NOI is plausible but unverified. Liquid reserves of $248,300 plus $387,000 in vested RSUs are substantial. Credit score 768 with a clean 84-month payment history is positive. However, outstanding documentation gaps and multi-source income complexity prevent a confident qualifying income determination at this time. Senior underwriter review is recommended.",
+    "confidence": 0.71,
+    "latency_ms": 0.0
+  },
+  "expected_soc2": {
+    "CC6.1": "TRACED",
+    "CC6.6": "NONE",
+    "CC6.8": "NO_SECRET",
+    "CC7.2": "NO_BREACH",
+    "CC7.4_routed": true,
+    "CC9.2": "CHAIN_OK",
+    "A1.2": "RECORDED",
+    "outcome": "escalated",
+    "escalation_reason": "LLM confidence 0.71 below threshold 0.82"
+  }
+}

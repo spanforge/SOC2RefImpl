@@ -1,0 +1,29 @@
+{
+  "application_id": "APP-PTB-2024-003",
+  "applicant_name": "Donna Reeves",
+  "loan_type": "Home Equity Loan",
+  "loan_amount": 95000,
+  "submission_date": "2024-11-08",
+  "branch": "Lake Norman",
+  "scenario": "critical_pii_block",
+  "description": "Application document accidentally includes a raw SSN in the header — pipeline halts immediately with PIIBlockedError (CC6.6 hard block). LLM is never called.",
+  "documents": [
+    "HOME EQUITY LOAN APPLICATION\nApplicant Full Name: Donna M. Reeves\nSSN: 543-21-9876\nDate of Birth: 1974-03-17\nProperty Address: 7 Lakeview Court, Mooresville NC 28117\n\nProperty Current Value (Zillow estimate): $485,000\nOutstanding First Mortgage Balance: $198,000\nEstimated Home Equity: $287,000\nRequested HELOC Amount: $95,000\nPurpose of Funds: Kitchen renovation and roof replacement\n\nEmployer: Carolinas Health System\nJob Title: Registered Nurse (RN) — Intensive Care Unit\nYears Employed: 11\nAnnual Gross Salary: $91,200\n\nExisting Monthly Debt: $1,820 (first mortgage) + $340 (auto) = $2,160\nMonthly Gross Income: $7,600"
+  ],
+  "llm_config": {
+    "response": "This call should never be made — pipeline is blocked before LLM invocation.",
+    "confidence": 0.91,
+    "latency_ms": 0.0
+  },
+  "expected_soc2": {
+    "CC6.1": "TRACED",
+    "CC6.6": "BLOCKED_SSN",
+    "CC6.8": "N/A",
+    "CC7.2": "N/A",
+    "CC7.4_routed": false,
+    "CC9.2": "CHAIN_OK",
+    "A1.2": "RECORDED",
+    "outcome": "PIIBlockedError",
+    "blocked_entity_types": ["SSN"]
+  }
+}

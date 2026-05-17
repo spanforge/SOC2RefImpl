@@ -1,0 +1,43 @@
+{
+  "id": "critical_pii_block",
+  "description": "Document contains a raw SSN. PIIHandler detects critical PII and raises PIIBlockedError — pipeline aborted (CC6.6).",
+  "tsc_criteria": ["CC6.6"],
+  "application_id": "APP-2024-003",
+  "applicant_name": "Robert Kim",
+  "documents": [
+    "Loan applicant: Robert Kim.\nSSN: 423-71-8906.\nDate of birth: 1984-03-12.\nEmployer: Pacific Coast Logistics.",
+    "Requested loan amount: $210,000. Property address: 4417 Birchwood Lane, Portland OR 97201."
+  ],
+  "llm_mock": {
+    "response": "This response should never be generated — pipeline must abort on critical PII.",
+    "confidence": 0.88,
+    "latency_ms": 0.0
+  },
+  "pii_mock": [
+    {
+      "detected": true,
+      "entities": ["SSN"],
+      "anonymized_text": null
+    },
+    {
+      "detected": false,
+      "entities": [],
+      "anonymized_text": null
+    }
+  ],
+  "secrets_mock": {
+    "detected": false,
+    "secret_types": [],
+    "auto_blocked": false,
+    "redacted_text": null
+  },
+  "gate_mock": { "verdict": "PASS" },
+  "drift_mock": { "breach_metrics": [] },
+  "expected": {
+    "exception": "PIIBlockedError",
+    "exception_entity_types": ["SSN"],
+    "routed_to_human": false,
+    "drift_breach": false,
+    "status": "error"
+  }
+}

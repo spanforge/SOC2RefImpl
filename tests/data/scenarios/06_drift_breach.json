@@ -1,0 +1,36 @@
+{
+  "id": "drift_breach",
+  "description": "LLM produces an unusually short response (18 chars vs baseline mean 500). DriftMonitor detects a response_length breach and records an alert (CC7.2).",
+  "tsc_criteria": ["CC7.2"],
+  "application_id": "APP-2024-006",
+  "applicant_name": "Amelia Fontaine",
+  "documents": [
+    "Applicant: Amelia Fontaine. VP of Marketing at Praxis Financial Group.\nBase salary: $225,000. Annual incentive target: $90,000. Total target comp: $315,000.\nTenure: 7 years. Strong employment history, no gaps."
+  ],
+  "llm_mock": {
+    "response": "Approve. No issues.",
+    "confidence": 0.88,
+    "latency_ms": 0.0
+  },
+  "pii_mock": [
+    { "detected": false, "entities": [], "anonymized_text": null }
+  ],
+  "secrets_mock": {
+    "detected": false,
+    "secret_types": [],
+    "auto_blocked": false,
+    "redacted_text": null
+  },
+  "gate_mock": { "verdict": "PASS" },
+  "drift_mock": {
+    "breach_metrics": ["response_length"],
+    "_comment": "Response is 18 chars vs baseline mean=500, stddev=100 → z-score ≈ -4.8 (exceeds z_threshold=3.0)"
+  },
+  "expected": {
+    "exception": null,
+    "routed_to_human": false,
+    "drift_breach": true,
+    "drift_breach_metrics": ["response_length"],
+    "status": "success"
+  }
+}

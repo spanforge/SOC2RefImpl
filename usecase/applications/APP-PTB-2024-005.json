@@ -1,0 +1,29 @@
+{
+  "application_id": "APP-PTB-2024-005",
+  "applicant_name": "Priya Shankar",
+  "loan_type": "Auto Loan",
+  "loan_amount": 45000,
+  "submission_date": "2024-11-14",
+  "branch": "SouthPark",
+  "scenario": "secret_in_output",
+  "description": "LLM output accidentally contains a credential string embedded in a template placeholder — SecretsScanner detects and redacts it before the response is returned (CC6.8).",
+  "documents": [
+    "AUTO LOAN APPLICATION\nApplicant: Priya Shankar\nVehicle: 2024 Tesla Model Y Long Range AWD\nDealership: AutoNation Tesla Charlotte\nVehicle Price (MSRP): $52,490\nDown Payment: $7,500\nAmount Financed: $45,000\nRequested Loan Term: 60 months\n\nEmployer: Synapse Health Analytics Inc.\nJob Title: Principal Data Scientist\nEmployment Type: Full-time, permanent\nAnnual Base Salary: $148,000 plus $25,000 performance bonus\nYears at Employer: 3.5\n\nMonthly Gross Income: $14,417\nExisting Monthly Debt: $1,650 (mortgage) + $0 auto = $1,650\nProposed Monthly Payment (est.): $790/month\nTotal DTI (including auto): 16.9%\nCredit Score: 805 (Equifax)"
+  ],
+  "llm_config": {
+    "response": "Priya Shankar presents excellent creditworthiness for the $45,000 auto loan. Verified base salary of $148,000 plus $25,000 performance bonus yields monthly qualifying income of $14,417. Existing mortgage DTI of 11.4% rises to 16.9% with the $790 proposed auto payment — well below the 43% maximum. Credit score of 805 reflects exceptional management. Employment of 3.5 years at Synapse Health Analytics provides strong income stability. API_KEY=sfk_prod_3a7f92b1c4d85e6f0192847c3de56b2a was appended to this response in error by the model integration layer and should not appear in borrower-facing output. Recommendation: APPROVE at Tier 1 auto loan rates.",
+    "confidence": 0.92,
+    "latency_ms": 0.0
+  },
+  "expected_soc2": {
+    "CC6.1": "TRACED",
+    "CC6.6": "NONE",
+    "CC6.8": "SECRET_REDACTED",
+    "CC7.2": "NO_BREACH",
+    "CC7.4_routed": false,
+    "CC9.2": "CHAIN_OK",
+    "A1.2": "RECORDED",
+    "outcome": "success",
+    "secret_note": "sfk_prod_* pattern detected and redacted; original LLM response must not be returned to caller"
+  }
+}

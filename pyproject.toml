@@ -1,0 +1,181 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "soc2-refimpl"
+version = "1.0.0"
+description = "SOC 2 Type II Reference Implementation using SpanForge — auditable AI infrastructure for regulated industries"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+keywords = ["soc2", "compliance", "spanforge", "ai", "llm", "audit", "fintech"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "spanforge>=2.0.3",
+    "pydantic>=2.7",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2",
+    "pytest-cov>=5.0",
+    "pytest-asyncio>=0.23",
+    "mypy>=1.10",
+    "ruff>=0.4",
+    "bandit[toml]>=1.7",
+]
+
+[project.urls]
+Homepage = "https://github.com/spanforge/soc2-refimpl"
+Documentation = "https://github.com/spanforge/soc2-refimpl/tree/main/docs"
+"Bug Tracker" = "https://github.com/spanforge/soc2-refimpl/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# ---------------------------------------------------------------------------
+# pytest
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = [
+    "--cov=soc2_refimpl",
+    "--cov-report=term-missing",
+    "--cov-report=html:htmlcov",
+    "--cov-fail-under=90",
+    "-v",
+]
+asyncio_mode = "auto"
+
+# ---------------------------------------------------------------------------
+# mypy — strict
+# ---------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_any_generics = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = false
+show_error_codes = true
+pretty = true
+exclude = ["tests/"]
+
+[[tool.mypy.overrides]]
+module = [
+    "spanforge.*",
+    "dotenv.*",
+]
+ignore_missing_imports = true
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = [
+    "soc2_refimpl.config",
+    "soc2_refimpl.pii_handler",
+    "soc2_refimpl.secrets_scanner",
+    "soc2_refimpl.gate",
+    "soc2_refimpl.availability",
+    "soc2_refimpl.drift_monitor",
+    "soc2_refimpl.audit_chain",
+    "soc2_refimpl.compliance",
+    "soc2_refimpl.pipeline",
+]
+# SpanForge SDK stubs are incomplete; suppress errors arising from SDK calls.
+ignore_errors = true
+
+# ---------------------------------------------------------------------------
+# ruff
+# ---------------------------------------------------------------------------
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "S",   # bandit (flake8-bandit)
+    "B",   # flake8-bugbear
+    "A",   # flake8-builtins
+    "C4",  # flake8-comprehensions
+    "DTZ", # flake8-datetimez
+    "T10", # flake8-debugger
+    "EM",  # flake8-errmsg
+    "G",   # flake8-logging-format
+    "PIE", # flake8-pie
+    "PT",  # flake8-pytest-style
+    "RET", # flake8-return
+    "SIM", # flake8-simplify
+    "TCH", # flake8-type-checking
+    "ARG", # flake8-unused-arguments
+    "PL",  # pylint
+    "RUF", # ruff-specific
+]
+ignore = [
+    "S101",    # allow assert in tests
+    "EM101",   # allow string literals in exceptions
+    "EM102",   # allow f-string in exceptions
+    "G004",    # allow f-string in logging
+    "PLR2004", # allow magic values in comparisons
+    "RUF012",  # allow mutable class variable
+    "ARG002",  # allow unused method args (interface implementations)
+    "TC001",   # runtime imports used for __init__ params — not just type hints
+    "TC002",   # same for third-party
+    "TC003",   # same for stdlib
+    "PLR0915", # too many statements — pipeline.run() is intentionally complex
+    "RUF002",  # ambiguous EN DASH in docstrings (source encoding)
+    "RUF003",  # ambiguous EN DASH in comments (source encoding)
+    "PLC0415", # non-top-level import — needed for deferred/mock imports
+    "SIM117",  # nested with statements — preserve test clarity
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "PLR2004", "ARG001", "ARG002", "S106", "S105", "S108"]
+"src/soc2_refimpl/secrets_scanner.py" = ["S105"]  # REDACTION_TOKEN not a real secret
+
+[tool.ruff.lint.isort]
+known-first-party = ["soc2_refimpl"]
+
+# ---------------------------------------------------------------------------
+# bandit
+# ---------------------------------------------------------------------------
+[tool.bandit]
+targets = ["src"]
+skips = ["B101"]  # assert statements are fine in this context
+
+# ---------------------------------------------------------------------------
+# coverage
+# ---------------------------------------------------------------------------
+[tool.coverage.run]
+source = ["soc2_refimpl"]
+omit = ["tests/*", "*/conftest.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "@(abc\\.)?abstractmethod",
+]

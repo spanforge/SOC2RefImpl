@@ -1,0 +1,29 @@
+{
+  "application_id": "APP-PTB-2024-006",
+  "applicant_name": "Marcus Bellamy",
+  "loan_type": "Personal Loan",
+  "loan_amount": 25000,
+  "submission_date": "2024-11-15",
+  "branch": "NoDa District",
+  "scenario": "drift_breach",
+  "description": "LLM produces an anomalously short response (21 chars vs baseline mean ~500 chars). DriftMonitor detects a response_length breach (z ≈ 4.8) and records a CC7.2 alert. Pipeline still completes — drift is an operational alert, not a hard block.",
+  "documents": [
+    "PERSONAL LOAN APPLICATION\nApplicant: Marcus Bellamy\nLoan Purpose: Debt consolidation — consolidating three high-interest credit cards\nLoan Amount Requested: $25,000\nRequested Term: 48 months\n\nEmployer: Charlotte-Mecklenburg Schools\nJob Title: High School Mathematics Teacher\nEmployment Type: Tenured, full-time\nBase Salary: $62,400/yr\nSupplemental Income (summer tutoring): $4,800/yr\nTotal Gross Annual Income: $67,200\n\nExisting Monthly Obligations:\n- Rent: $1,150\n- Auto Loan: $285/month (14 months remaining)\n- Credit Card Minimum Payments (to be consolidated): $1,240/month total\n  * Visa Platinum: $13,200 at 24.99% APR — min $320/month\n  * Mastercard Gold: $8,900 at 21.99% APR — min $240/month\n  * Synchrony Home: $4,600 at 26.49% APR — min $140/month  \n  * Store card (Target): $2,100 at 28.99% APR — min $60/month\nTotal Current Monthly Debt: $2,675\nProposed Consolidation Payment: $580/month\nPost-consolidation Monthly Debt: $2,015\n\nCredit Score: 697 (TransUnion)\nOn-time payment rate last 24 months: 96%"
+  ],
+  "llm_config": {
+    "response": "Approve. Standard risk.",
+    "confidence": 0.89,
+    "latency_ms": 0.0
+  },
+  "expected_soc2": {
+    "CC6.1": "TRACED",
+    "CC6.6": "NONE",
+    "CC6.8": "NO_SECRET",
+    "CC7.2": "DRIFT_BREACH",
+    "CC7.4_routed": false,
+    "CC9.2": "CHAIN_OK",
+    "A1.2": "RECORDED",
+    "outcome": "success",
+    "drift_note": "Response 'Approve. Standard risk.' = 22 chars vs baseline mean 500 chars, stddev 100. z = |(22-500)/100| = 4.78 > threshold 3.0. Drift alert recorded in audit chain."
+  }
+}

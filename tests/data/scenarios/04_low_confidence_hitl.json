@@ -1,0 +1,36 @@
+{
+  "id": "low_confidence_hitl",
+  "description": "LLM returns confidence 0.65 — below the 0.82 gate threshold. Response is routed to human review (CC7.4).",
+  "tsc_criteria": ["CC7.4"],
+  "application_id": "APP-2024-004",
+  "applicant_name": "Reginald Chen",
+  "documents": [
+    "Applicant: Reginald Chen. Occupation: independent consultant, variable income.\nGross income 2022: $134,000. Gross income 2023: $89,000. Gross income 2024 (YTD): $61,000.",
+    "Loan request: $450,000. Existing obligations: $2,100/month (student loans, auto). Credit score: 694.",
+    "Employer of record: self. No W-2. Business registered in California as sole proprietor since 2019. No bankruptcy history."
+  ],
+  "llm_mock": {
+    "response": "Applicant profile is mixed. Income volatility over the past three years (33% decline from 2022 to 2023) raises serviceability concerns. Debt-to-income ratio is approximately 28% on 2023 income, which is marginal. Credit score of 694 is within acceptable range but below preferred threshold. Recommend manual underwriter review to assess income trend and verify 2024 projections before approval.",
+    "confidence": 0.65,
+    "latency_ms": 0.0
+  },
+  "pii_mock": [
+    { "detected": false, "entities": [], "anonymized_text": null },
+    { "detected": false, "entities": [], "anonymized_text": null },
+    { "detected": false, "entities": [], "anonymized_text": null }
+  ],
+  "secrets_mock": {
+    "detected": false,
+    "secret_types": [],
+    "auto_blocked": false,
+    "redacted_text": null
+  },
+  "gate_mock": { "verdict": "FAIL" },
+  "drift_mock": { "breach_metrics": [] },
+  "expected": {
+    "exception": null,
+    "routed_to_human": true,
+    "drift_breach": false,
+    "status": "escalated"
+  }
+}
