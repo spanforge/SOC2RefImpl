@@ -1,0 +1,91 @@
+{
+  "bundle_id": "soc2-session-20260517T084544Z",
+  "project_id": "pinnacle-trust-loan-assist",
+  "generated_at": "2026-05-17T08:45:44.397406+00:00",
+  "applications": [
+    "APP-PTB-2024-001",
+    "APP-PTB-2024-002",
+    "APP-PTB-2024-003",
+    "APP-PTB-2024-004",
+    "APP-PTB-2024-005",
+    "APP-PTB-2024-006"
+  ],
+  "spans_total": 6,
+  "tsc_coverage": [
+    "CC6.1",
+    "CC6.6",
+    "CC6.8",
+    "CC7.2",
+    "CC7.4",
+    "CC9.2",
+    "A1.2"
+  ],
+  "outcomes": [
+    {
+      "application_id": "APP-PTB-2024-001",
+      "scenario": "clean",
+      "outcome": "success"
+    },
+    {
+      "application_id": "APP-PTB-2024-002",
+      "scenario": "pii_redaction",
+      "outcome": "success"
+    },
+    {
+      "application_id": "APP-PTB-2024-003",
+      "scenario": "critical_pii_block",
+      "outcome": "blocked_pii"
+    },
+    {
+      "application_id": "APP-PTB-2024-004",
+      "scenario": "low_confidence_hitl",
+      "outcome": "escalated"
+    },
+    {
+      "application_id": "APP-PTB-2024-005",
+      "scenario": "secret_in_output",
+      "outcome": "success"
+    },
+    {
+      "application_id": "APP-PTB-2024-006",
+      "scenario": "drift_breach",
+      "outcome": "success_drift_alert"
+    }
+  ],
+  "artifacts": {
+    "invocations.jsonl": {
+      "path": "D:\\Sriram\\SOC2RefImpl\\usecase\\audit_output\\session_bundle\\invocations.jsonl",
+      "sha256": "0418274e297b25f62e02a7cc153ca80338e4c66370c14a6ba4162e1a54aac882"
+    },
+    "pii_redaction.jsonl": {
+      "path": "D:\\Sriram\\SOC2RefImpl\\usecase\\audit_output\\session_bundle\\pii_redaction.jsonl",
+      "sha256": "3efcdcc69021caaeb5b354543e59cd59d85d498213bc9ab185fb4ea10fa2acea"
+    },
+    "secrets_scan.jsonl": {
+      "path": "D:\\Sriram\\SOC2RefImpl\\usecase\\audit_output\\session_bundle\\secrets_scan.jsonl",
+      "sha256": "17f2959429bb4e66be7a0ab04dfaae6ee85bf5d8395a2ed3d1ebb1c13a7fee9a"
+    },
+    "drift_alerts.jsonl": {
+      "path": "D:\\Sriram\\SOC2RefImpl\\usecase\\audit_output\\session_bundle\\drift_alerts.jsonl",
+      "sha256": "ba5c274aa2228c16027d17a87b4dfbcca4cffdee1ef5a9e1f7830d0bff4d7b41"
+    },
+    "gate_escalations.jsonl": {
+      "path": "D:\\Sriram\\SOC2RefImpl\\usecase\\audit_output\\session_bundle\\gate_escalations.jsonl",
+      "sha256": "6185f5e2988dd099e15dcf5744130c70934ee1ddd5dd8b449204fee8adde5c67"
+    },
+    "audit_chain.jsonl": {
+      "path": "D:\\Sriram\\SOC2RefImpl\\usecase\\audit_output\\session_bundle\\audit_chain.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "availability_stats.json": {
+      "path": "D:\\Sriram\\SOC2RefImpl\\usecase\\audit_output\\session_bundle\\availability_stats.json",
+      "sha256": "ace8f620d52ec2b42d1a8fb6e45cd30a7818fd145b6f35c63b7cc75e074d2f84"
+    }
+  },
+  "integrity": {
+    "algorithm": "HMAC-SHA256",
+    "hash_payload_format": "sorted artifact names, sha256 values joined by '|'",
+    "hmac": "62b948de51cc91ff142a112ae3f6148e5069421844c4a7aac66cc83c00722d7e",
+    "note": "Reproduce: hmac-sha256(signing_key, sorted_sha256_values_joined_by_pipe) must equal this field."
+  }
+}

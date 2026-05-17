@@ -1,0 +1,8 @@
+{
+  "total_invocations": 1,
+  "error_count": 0,
+  "uptime_pct": 100.0,
+  "p50_ms": 39.3,
+  "p95_ms": 39.3,
+  "p99_ms": 39.3
+}

@@ -1,0 +1,33 @@
+{
+  "bundle_id": "soc2-local-20260517T084544Z",
+  "service": "pinnacle-trust-loan-assist",
+  "generated_at": "2026-05-17T08:45:44.071701+00:00",
+  "spans_total": 1,
+  "tsc_mapping": {
+    "CC6.1": "1 traced invocations",
+    "CC6.6": "3 PII entities redacted across 3 documents",
+    "CC6.8": "0 secrets detected in output",
+    "CC7.2": "0 drift alerts",
+    "CC7.4": "1 escalations to human review",
+    "CC9.2": "HMAC chain \u2014 verify with audit_chain.verify()",
+    "A1.2": "100.00% uptime; p99 latency 100ms"
+  },
+  "artifacts": {
+    "invocations.jsonl": "D:\\Sriram\\SOC2RefImpl\\usecase\\audit_output\\APP-PTB-2024-004\\invocations.jsonl",
+    "pii_redaction.jsonl": "D:\\Sriram\\SOC2RefImpl\\usecase\\audit_output\\APP-PTB-2024-004\\pii_redaction.jsonl",
+    "secrets_scan.jsonl": "D:\\Sriram\\SOC2RefImpl\\usecase\\audit_output\\APP-PTB-2024-004\\secrets_scan.jsonl",
+    "drift_alerts.jsonl": "D:\\Sriram\\SOC2RefImpl\\usecase\\audit_output\\APP-PTB-2024-004\\drift_alerts.jsonl",
+    "gate_escalations.jsonl": "D:\\Sriram\\SOC2RefImpl\\usecase\\audit_output\\APP-PTB-2024-004\\gate_escalations.jsonl",
+    "audit_chain.jsonl": "D:\\Sriram\\SOC2RefImpl\\usecase\\audit_output\\APP-PTB-2024-004\\audit_chain.jsonl",
+    "availability_stats.json": "D:\\Sriram\\SOC2RefImpl\\usecase\\audit_output\\APP-PTB-2024-004\\availability_stats.json"
+  },
+  "tsc_descriptions": {
+    "CC6.1": "Logical access controls \u2014 every model invocation traced and signed",
+    "CC6.6": "Restriction of access to sensitive data \u2014 PII detection and redaction",
+    "CC6.8": "Prevention of unauthorized output \u2014 secret/credential scan",
+    "CC7.2": "System monitoring \u2014 behavioural drift detection",
+    "CC7.4": "Incident response \u2014 human-in-the-loop escalation gate",
+    "CC9.2": "Risk monitoring (third parties) \u2014 tamper-evident HMAC audit chain",
+    "A1.2": "Availability \u2014 AI pipeline uptime and latency metrics"
+  }
+}

@@ -1,0 +1,2 @@
+{"document_index": 0, "entity_types_detected": ["PERSON_NAME", "EMAIL", "PHONE", "EMAIL", "PHONE"], "entity_count": 5, "redacted": true, "redacted_at": "2026-05-17T08:45:43.859793+00:00", "pre_hash": "ef5ae833f57a8b3d1d6678a1304951a69bf87f79724c53f454c6deb86bf7d83f"}
+{"document_index": 1, "entity_types_detected": [], "entity_count": 0, "redacted": false, "redacted_at": "2026-05-17T08:45:43.888352+00:00", "pre_hash": "0521ffdc9d1e08ea5aea9272b4cdce8fd207df27fae0a863718b5c746fef5c0d"}

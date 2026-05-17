@@ -1,0 +1,52 @@
+{
+  "applications": [
+    {
+      "total_invocations": 1,
+      "error_count": 0,
+      "uptime_pct": 100.0,
+      "p50_ms": 10320.54,
+      "p95_ms": 10320.54,
+      "p99_ms": 10320.54
+    },
+    {
+      "total_invocations": 1,
+      "error_count": 0,
+      "uptime_pct": 100.0,
+      "p50_ms": 108.24,
+      "p95_ms": 108.24,
+      "p99_ms": 108.24
+    },
+    {
+      "total_invocations": 1,
+      "error_count": 1,
+      "uptime_pct": 0.0,
+      "p50_ms": 36.56,
+      "p95_ms": 36.56,
+      "p99_ms": 36.56
+    },
+    {
+      "total_invocations": 1,
+      "error_count": 0,
+      "uptime_pct": 100.0,
+      "p50_ms": 100.16,
+      "p95_ms": 100.16,
+      "p99_ms": 100.16
+    },
+    {
+      "total_invocations": 1,
+      "error_count": 0,
+      "uptime_pct": 100.0,
+      "p50_ms": 39.3,
+      "p95_ms": 39.3,
+      "p99_ms": 39.3
+    },
+    {
+      "total_invocations": 1,
+      "error_count": 0,
+      "uptime_pct": 100.0,
+      "p50_ms": 58.57,
+      "p95_ms": 58.57,
+      "p99_ms": 58.57
+    }
+  ]
+}

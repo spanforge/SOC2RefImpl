@@ -5,9 +5,9 @@
     "answer": "Approve. Standard risk.",
     "confidence": 0.89,
     "threshold": 0.82,
-    "invocation_id": "d8513bfc-93a5-4ce9-9415-e70619c76b50"
+    "invocation_id": "f6d1d806-9f61-4674-8e75-d12b8adfbc37"
   },
-  "timestamp": "2026-05-17T08:08:48.909405+00:00",
+  "timestamp": "2026-05-17T08:45:44.199172+00:00",
   "duration_ms": 0,
   "project_id": "pinnacle-trust-loan-assist",
   "pipeline_id": "pinnacle-trust-loan-assist"

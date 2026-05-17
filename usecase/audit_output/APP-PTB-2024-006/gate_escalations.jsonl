@@ -1,0 +1,1 @@
+{"invocation_id": "f6d1d806-9f61-4674-8e75-d12b8adfbc37", "confidence": 0.89, "threshold": 0.82, "passed": true, "routed_to_human": false, "escalation_queue": "", "decided_at": "2026-05-17T08:45:44.204078+00:00", "gate_id": "loan-summary-confidence"}

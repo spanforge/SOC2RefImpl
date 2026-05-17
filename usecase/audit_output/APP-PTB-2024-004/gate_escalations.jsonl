@@ -1,0 +1,1 @@
+{"invocation_id": "c779bf41-bdca-4d2f-bc0e-fa9b4d8295e0", "confidence": 0.71, "threshold": 0.82, "passed": false, "routed_to_human": true, "escalation_queue": "senior-underwriter-review", "decided_at": "2026-05-17T08:45:44.068956+00:00", "gate_id": "loan-summary-confidence"}

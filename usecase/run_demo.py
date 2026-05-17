@@ -24,11 +24,15 @@ Controls demonstrated
 from __future__ import annotations
 
 import contextlib
+import dataclasses
+import hashlib
+import hmac as _hmac
 import json
 import logging
 import sys
 import time
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -120,23 +124,37 @@ def _run_application(
     app_data: dict[str, Any],
     config: PipelineConfig,
 ) -> tuple[PipelineResult | None, Exception | None, float]:
+    # Each application gets its own audit subdirectory so evidence files
+    # from different runs don't overwrite each other.
+    app_id = app_data["application_id"]
+    app_config = dataclasses.replace(
+        config,
+        audit_output_dir=str(_AUDIT_DIR / app_id),
+    )
+
     llm = MockLLMBackend(
         response=app_data["llm_config"]["response"],
         confidence=app_data["llm_config"]["confidence"],
         latency_ms=app_data["llm_config"].get("latency_ms", 0.0),
     )
-    pipeline = LoanSummaryPipeline(config, llm=llm)
+    pipeline = LoanSummaryPipeline(app_config, llm=llm)
     result: PipelineResult | None = None
     error: Exception | None = None
     t0 = time.monotonic()
     try:
-        result = pipeline.run(app_data["application_id"], app_data["documents"])
+        result = pipeline.run(app_id, app_data["documents"])
     except (PIIBlockedError, SecretDetectedError) as exc:
         error = exc
     except Exception as exc:
         error = exc
     finally:
         elapsed = time.monotonic() - t0
+        # Export evidence before closing — this writes the 8 audit artefacts
+        # (invocations.jsonl, pii_redaction.jsonl, secrets_scan.jsonl,
+        # drift_alerts.jsonl, gate_escalations.jsonl, audit_chain.jsonl,
+        # availability_stats.json, manifest.json) to audit_output/<app_id>/
+        with contextlib.suppress(Exception):
+            pipeline.export_evidence_bundle()
         with contextlib.suppress(Exception):
             pipeline.close()
     return result, error, elapsed
@@ -447,6 +465,151 @@ def _print_summary(app_results: list[AppResult]) -> None:  # noqa: PLR0912
     print()
 
 
+# ── Session bundle (HMAC-signed, cross-application) ─────────────────────────
+
+_JSONL_ARTIFACTS = [
+    "invocations.jsonl",
+    "pii_redaction.jsonl",
+    "secrets_scan.jsonl",
+    "drift_alerts.jsonl",
+    "gate_escalations.jsonl",
+    "audit_chain.jsonl",
+]
+
+
+def _sha256_file(path: Path) -> str:
+    """Return hex SHA-256 digest of a file's content."""
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _hmac_sign(key: str, message: str) -> str:
+    """Return hex HMAC-SHA256 of *message* using *key*."""
+    return _hmac.new(
+        key.encode("utf-8"),
+        message.encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+
+
+def _merge_jsonl_artifact(artifact: str, app_ids: list[str], bundle_dir: Path) -> str:
+    """Merge one JSONL artifact from all per-app directories into *bundle_dir*.
+
+    Returns the SHA-256 hex digest of the merged file.
+    """
+    out_path = bundle_dir / artifact
+    with out_path.open("w", encoding="utf-8") as out_fh:
+        for app_id in app_ids:
+            src = _AUDIT_DIR / app_id / artifact
+            if src.exists():
+                for raw in src.read_text(encoding="utf-8").splitlines():
+                    stripped = raw.strip()
+                    if stripped:
+                        out_fh.write(stripped + "\n")
+    return _sha256_file(out_path)
+
+
+def _classify_outcome(ar: AppResult) -> str:
+    """Return a short outcome string for a single application result."""
+    if isinstance(ar.error, PIIBlockedError):
+        return "blocked_pii"
+    if ar.result is None:
+        return "error"
+    if ar.result.routed_to_human:
+        return "escalated"
+    if ar.result.drift_breaches:
+        return "success_drift_alert"
+    return "success"
+
+
+def _export_session_bundle(
+    config: PipelineConfig,
+    app_results: list[AppResult],
+) -> Path:
+    """Merge all per-application artefacts into one HMAC-signed session bundle.
+
+    Writes to ``audit_output/session_bundle/`` and returns the path to
+    ``session_manifest.json``.
+
+    The HMAC signature covers every merged file's SHA-256 hash concatenated
+    (sorted by file name, joined with ``|``), signed with the same signing key
+    that the SpanForge AuditStream uses for per-app chain signing.
+    """
+    bundle_dir = _AUDIT_DIR / "session_bundle"
+    bundle_dir.mkdir(parents=True, exist_ok=True)
+
+    app_ids = [ar.app_data["application_id"] for ar in app_results]
+    written: dict[str, str] = {}  # artifact name → sha256
+
+    # ── Merge per-app JSONL artefacts ────────────────────────────────────
+    for artifact in _JSONL_ARTIFACTS:
+        written[artifact] = _merge_jsonl_artifact(artifact, app_ids, bundle_dir)
+
+    # ── Aggregate manifest stats from all apps ───────────────────────────
+    all_manifests: list[dict[str, Any]] = []
+    for app_id in app_ids:
+        mf_path = _AUDIT_DIR / app_id / "manifest.json"
+        if mf_path.exists():
+            all_manifests.append(json.loads(mf_path.read_text(encoding="utf-8")))
+    total_spans = sum(m.get("spans_total", 0) for m in all_manifests)
+
+    # ── Aggregate availability stats ──────────────────────────────────────
+    avail_records: list[dict[str, Any]] = []
+    for app_id in app_ids:
+        av_path = _AUDIT_DIR / app_id / "availability_stats.json"
+        if av_path.exists():
+            avail_records.append(json.loads(av_path.read_text(encoding="utf-8")))
+    avail_path = bundle_dir / "availability_stats.json"
+    avail_path.write_text(
+        json.dumps({"applications": avail_records}, indent=2), encoding="utf-8"
+    )
+    written["availability_stats.json"] = _sha256_file(avail_path)
+
+    # ── Compute HMAC over all file hashes in deterministic order ─────────
+    hash_payload = "|".join(written[k] for k in sorted(written))
+    signature = _hmac_sign(config.signing_key, hash_payload)
+
+    # ── Build per-application outcome summary ─────────────────────────────
+    outcomes = [
+        {
+            "application_id": ar.app_data["application_id"],
+            "scenario": ar.app_data.get("scenario"),
+            "outcome": _classify_outcome(ar),
+        }
+        for ar in app_results
+    ]
+
+    # ── Write session_manifest.json ───────────────────────────────────────
+    now = datetime.now(tz=UTC)
+    session_manifest: dict[str, Any] = {
+        "bundle_id": f"soc2-session-{now.strftime('%Y%m%dT%H%M%SZ')}",
+        "project_id": config.project_id,
+        "generated_at": now.isoformat(),
+        "applications": app_ids,
+        "spans_total": total_spans,
+        "tsc_coverage": [
+            "CC6.1", "CC6.6", "CC6.8", "CC7.2", "CC7.4", "CC9.2", "A1.2",
+        ],
+        "outcomes": outcomes,
+        "artifacts": {
+            name: {"path": str(bundle_dir / name), "sha256": digest}
+            for name, digest in written.items()
+        },
+        "integrity": {
+            "algorithm": "HMAC-SHA256",
+            "hash_payload_format": "sorted artifact names, sha256 values joined by '|'",
+            "hmac": signature,
+            "note": (
+                "Reproduce: hmac-sha256(signing_key, sorted_sha256_values_joined_by_pipe)"
+                " must equal this field."
+            ),
+        },
+    }
+    manifest_path = bundle_dir / "session_manifest.json"
+    manifest_path.write_text(json.dumps(session_manifest, indent=2), encoding="utf-8")
+
+    return manifest_path
+
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 
@@ -485,6 +648,23 @@ def main() -> int:
             _print_checks(checks)
 
     _print_summary(app_results)
+
+    # ── Session-level HMAC-signed bundle ─────────────────────────────────────
+    manifest_path = _export_session_bundle(config, app_results)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    hmac_sig = manifest["integrity"]["hmac"]
+    print(_c(_BOLD, "  SESSION AUDIT BUNDLE (CC9.2)"))
+    print(f"  Path    : {_c(_CYAN, str(manifest_path))}")
+    print(f"  Bundle  : {manifest['bundle_id']}")
+    print(f"  Spans   : {manifest['spans_total']} invocations across "
+          f"{len(manifest['applications'])} applications")
+    print(f"  HMAC    : {_c(_GREEN + _BOLD, hmac_sig[:16])}…{hmac_sig[-8:]}"
+          f"  (HMAC-SHA256, full value in session_manifest.json)")
+    print()
+    print(_c(_DIM, "  Artefacts in session_bundle/:"))
+    for name, meta in manifest["artifacts"].items():
+        print(_c(_DIM, f"    {name:<35} sha256:{meta['sha256'][:12]}…"))
+    print()
 
     # Return non-zero exit code if any check failed
     all_ok = all(
