@@ -22,7 +22,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "spanforge>=2.0.3",
+    "spanforge>=1.0.4",
     "pydantic>=2.7",
     "python-dotenv>=1.0",
 ]
@@ -78,26 +78,9 @@ exclude = ["tests/"]
 
 [[tool.mypy.overrides]]
 module = [
-    "spanforge.*",
     "dotenv.*",
 ]
 ignore_missing_imports = true
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = [
-    "soc2_refimpl.config",
-    "soc2_refimpl.pii_handler",
-    "soc2_refimpl.secrets_scanner",
-    "soc2_refimpl.gate",
-    "soc2_refimpl.availability",
-    "soc2_refimpl.drift_monitor",
-    "soc2_refimpl.audit_chain",
-    "soc2_refimpl.compliance",
-    "soc2_refimpl.pipeline",
-]
-# SpanForge SDK stubs are incomplete; suppress errors arising from SDK calls.
-ignore_errors = true
 
 # ---------------------------------------------------------------------------
 # ruff

@@ -13,11 +13,7 @@ from __future__ import annotations
 
 import logging
 
-from spanforge.sdk.gate import (  # type: ignore[import-untyped, attr-defined, no-untyped-def]
-    GateVerdict,
-    SFClientConfig,
-    SFGateClient,
-)
+from spanforge.sdk.gate import GateVerdict, SFGateClient
 
 from soc2_refimpl.config import PipelineConfig
 from soc2_refimpl.models import GateDecision, utc_now_iso
@@ -45,8 +41,7 @@ class ComplianceGate:
         config: PipelineConfig,
         gate_id: str = _DEFAULT_GATE_ID,
     ) -> None:
-        sf_cfg: SFClientConfig = config.to_sf_client_config()  # type: ignore[assignment]
-        self._client = SFGateClient(sf_cfg)
+        self._client: SFGateClient = config.to_sf_factory().gate  # type: ignore[assignment]
         self._threshold = config.confidence_threshold
         self._escalation_queue = config.escalation_queue
         self._project_id = config.project_id

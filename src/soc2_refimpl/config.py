@@ -97,6 +97,8 @@ class PipelineConfig:
     tsc_criteria: list[str] = field(
         default_factory=lambda: ["CC6.1", "CC6.6", "CC6.8", "CC7.2", "CC7.4", "CC9.2", "A1.2"]
     )
+    # Internal: cached SFClientFactory — populated on first call to to_sf_factory()
+    _factory: object = field(init=False, default=None, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         if len(self.signing_key) < _MIN_SIGNING_KEY_LEN:
@@ -154,11 +156,8 @@ class PipelineConfig:
         )
 
     def to_sf_client_config(self) -> object:
-        """Return a ``SFClientConfig`` suitable for all SpanForge SDK clients."""
-        # Import deferred to keep startup fast when SpanForge is not configured
-        from spanforge.sdk.pii import (
-            SFClientConfig,  # type: ignore[import-untyped, attr-defined, no-untyped-def]
-        )
+        """Return an ``SFClientConfig`` suitable for all SpanForge SDK clients."""
+        from spanforge.sdk import SFClientConfig
 
         return SFClientConfig(
             api_key=self.api_key,
@@ -167,3 +166,15 @@ class PipelineConfig:
             local_fallback_enabled=self.local_fallback,
             signing_key=self.signing_key,
         )
+
+    def to_sf_factory(self) -> object:
+        """Return a cached :class:`~spanforge.sdk.SFClientFactory` for this config.
+
+        All SpanForge service clients (PII, secrets, gate, audit, CEC, observe)
+        are vended lazily from this single factory, sharing one ``SFClientConfig``.
+        """
+        from spanforge.sdk import SFClientFactory
+
+        if self._factory is None:
+            self._factory = SFClientFactory(self.to_sf_client_config())  # type: ignore[arg-type]
+        return self._factory

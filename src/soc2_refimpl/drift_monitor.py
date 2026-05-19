@@ -19,18 +19,10 @@ import logging
 from dataclasses import dataclass, field
 from typing import Any
 
-from spanforge.baseline import (
-    BehaviouralBaseline,  # type: ignore[import-untyped, attr-defined, no-untyped-def]
-)
-from spanforge.drift import (  # type: ignore[import-untyped, attr-defined, no-untyped-def]
-    DriftDetector,
-    DriftResult,
-)
-from spanforge.event import (  # type: ignore[import-untyped, attr-defined, no-untyped-def]
-    Event,
-    Tags,
-)
-from spanforge.types import EventType  # type: ignore[import-untyped, attr-defined, no-untyped-def]
+from spanforge.baseline import BehaviouralBaseline
+from spanforge.drift import DriftDetector, DriftResult
+from spanforge.event import Event, Tags
+from spanforge.types import EventType
 
 from soc2_refimpl.config import PipelineConfig
 

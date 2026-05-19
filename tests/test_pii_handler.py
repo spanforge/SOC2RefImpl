@@ -110,7 +110,7 @@ class TestPIIHandlerProcessDocuments:
 
         # Mock scan_text to return an SSN entity
         mock_entity = MagicMock()
-        mock_entity.entity_type = "SSN"
+        mock_entity.type = "SSN"
         mock_scan = MagicMock()
         mock_scan.entities = [mock_entity]
         mock_scan.detected = True
@@ -129,7 +129,7 @@ class TestPIIHandlerProcessDocuments:
         handler = PIIHandler(base_config)  # type: ignore[arg-type]
 
         mock_entity = MagicMock()
-        mock_entity.entity_type = "ACCOUNT_NUMBER"
+        mock_entity.type = "ACCOUNT_NUMBER"
         mock_scan = MagicMock()
         mock_scan.entities = [mock_entity]
 
@@ -147,7 +147,7 @@ class TestPIIHandlerProcessDocuments:
         handler = PIIHandler(base_config)  # type: ignore[arg-type]
 
         mock_entity = MagicMock()
-        mock_entity.entity_type = "EMAIL_ADDRESS"
+        mock_entity.type = "EMAIL_ADDRESS"
         mock_scan = MagicMock()
         mock_scan.entities = [mock_entity]
         mock_anon = MagicMock()

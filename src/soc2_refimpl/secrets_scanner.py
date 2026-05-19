@@ -13,10 +13,7 @@ from __future__ import annotations
 
 import logging
 
-from spanforge.sdk.secrets import (  # type: ignore[import-untyped, attr-defined, no-untyped-def]
-    SFClientConfig,
-    SFSecretsClient,
-)
+from spanforge.sdk.secrets import SFSecretsClient
 
 from soc2_refimpl.config import PipelineConfig
 from soc2_refimpl.exceptions import SecretDetectedError
@@ -54,8 +51,7 @@ class SecretsScanner:
         *,
         block_on_detection: bool = False,
     ) -> None:
-        sf_cfg: SFClientConfig = config.to_sf_client_config()  # type: ignore[assignment]
-        self._client = SFSecretsClient(sf_cfg)
+        self._client: SFSecretsClient = config.to_sf_factory().secrets  # type: ignore[assignment]
         self._threshold = confidence_threshold
         self._block_on_detection = block_on_detection
         log.debug(

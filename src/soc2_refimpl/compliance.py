@@ -22,10 +22,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from spanforge.sdk.cec import (  # type: ignore[import-untyped, attr-defined, no-untyped-def]
-    SFCECClient,
-    SFClientConfig,
-)
+from spanforge.sdk.cec import SFCECClient
 
 from soc2_refimpl.audit_chain import AuditChain
 from soc2_refimpl.availability import AvailabilityMonitor
@@ -70,8 +67,7 @@ class ComplianceExporter:
         audit_chain: AuditChain,
         availability_monitor: AvailabilityMonitor,
     ) -> None:
-        sf_cfg: SFClientConfig = config.to_sf_client_config()  # type: ignore[assignment]
-        self._cec = SFCECClient(sf_cfg)
+        self._cec: SFCECClient = config.to_sf_factory().cec  # type: ignore[assignment]
         self._config = config
         self._audit_chain = audit_chain
         self._availability = availability_monitor

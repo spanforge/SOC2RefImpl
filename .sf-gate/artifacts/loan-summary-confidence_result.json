@@ -2,13 +2,13 @@
   "gate_id": "loan-summary-confidence",
   "verdict": "PASS",
   "metrics": {
-    "answer": "Approve. Standard risk.",
-    "confidence": 0.89,
+    "answer": "Approve. No issues.",
+    "confidence": 0.88,
     "threshold": 0.82,
-    "invocation_id": "f6d1d806-9f61-4674-8e75-d12b8adfbc37"
+    "invocation_id": "55838f64-de0a-4c6d-9e9d-c339b6fa7bca"
   },
-  "timestamp": "2026-05-17T08:45:44.199172+00:00",
+  "timestamp": "2026-05-19T02:34:38.597748+00:00",
   "duration_ms": 0,
-  "project_id": "pinnacle-trust-loan-assist",
-  "pipeline_id": "pinnacle-trust-loan-assist"
+  "project_id": "meridian-loan-summary",
+  "pipeline_id": "meridian-loan-summary"
 }

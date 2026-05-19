@@ -20,19 +20,11 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from spanforge.event import (  # type: ignore[import-untyped, attr-defined, no-untyped-def]
-    Event,
-    Tags,
-)
-from spanforge.sdk.audit import (  # type: ignore[import-untyped, attr-defined, no-untyped-def]
-    SFAuditClient,
-    SFClientConfig,
-)
-from spanforge.signing import (  # type: ignore[import-untyped, attr-defined, no-untyped-def]
-    AuditStream,
-    ChainVerificationResult,
-)
-from spanforge.types import EventType  # type: ignore[import-untyped, attr-defined, no-untyped-def]
+from spanforge.event import Event, Tags
+from spanforge.schemas import DRIFT_V1, GATE_V1, PII_V1, SECRETS_V1, TRACE_V1
+from spanforge.sdk.audit import SFAuditClient
+from spanforge.signing import AuditStream, ChainVerificationResult
+from spanforge.types import EventType
 
 from soc2_refimpl.config import PipelineConfig
 from soc2_refimpl.exceptions import AuditChainError
@@ -46,11 +38,11 @@ from soc2_refimpl.models import (
 log = logging.getLogger(__name__)
 
 # Schema keys used when appending records to SFAuditClient
-_SCHEMA_TRACE = "spanforge.trace.v1"
-_SCHEMA_PII = "spanforge.pii.v1"
-_SCHEMA_SECRETS = "spanforge.secrets.v1"
-_SCHEMA_DRIFT = "spanforge.drift.v1"
-_SCHEMA_GATE = "spanforge.gate.v1"
+_SCHEMA_TRACE = TRACE_V1
+_SCHEMA_PII = PII_V1
+_SCHEMA_SECRETS = SECRETS_V1
+_SCHEMA_DRIFT = DRIFT_V1
+_SCHEMA_GATE = GATE_V1
 _SCHEMA_INVOCATION = "spanforge.invocation.v1"
 
 
@@ -74,8 +66,7 @@ class AuditChain:
         )
 
         # Durable backing store
-        sf_cfg: SFClientConfig = config.to_sf_client_config()  # type: ignore[assignment]
-        self._store = SFAuditClient(sf_cfg)
+        self._store: SFAuditClient = config.to_sf_factory().audit  # type: ignore[assignment]
 
         log.debug("AuditChain initialised (project=%s)", config.project_id)
 

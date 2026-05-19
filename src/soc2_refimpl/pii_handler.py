@@ -16,10 +16,7 @@ from __future__ import annotations
 import hashlib
 import logging
 
-from spanforge.sdk.pii import (  # type: ignore[import-untyped, attr-defined, no-untyped-def]
-    SFClientConfig,
-    SFPIIClient,
-)
+from spanforge.sdk.pii import SFPIIClient
 
 from soc2_refimpl.config import PipelineConfig
 from soc2_refimpl.exceptions import PIIBlockedError
@@ -59,8 +56,7 @@ class PIIHandler:
     """
 
     def __init__(self, config: PipelineConfig) -> None:
-        sf_cfg: SFClientConfig = config.to_sf_client_config()  # type: ignore[assignment]
-        self._client = SFPIIClient(sf_cfg)
+        self._client: SFPIIClient = config.to_sf_factory().pii  # type: ignore[assignment]
         log.debug("PIIHandler initialised (local_fallback=%s)", config.local_fallback)
 
     def process_documents(
@@ -95,12 +91,9 @@ class PIIHandler:
             pre_hash = _sha256(doc)
             scan_result = self._client.scan_text(doc, language="en", score_threshold=0.5)
 
-            # SpanForge SDK uses .type (local) or .entity_type (cloud) — handle both
+            # SDK uses unified .type attribute since v1.0.4
             detected_types = (
-                [
-                    (getattr(e, "entity_type", None) or getattr(e, "type", "")).upper()
-                    for e in scan_result.entities
-                ]
+                [e.type.upper() for e in scan_result.entities]
                 if scan_result.entities
                 else []
             )
@@ -115,14 +108,9 @@ class PIIHandler:
                 )
                 raise PIIBlockedError(critical_found)
 
-            # Anonymize: replace PII with typed placeholders like <SSN>, <EMAIL_ADDRESS>
-            # SpanForge SDK uses .text (local) or .anonymized_text (cloud) — handle both
+            # SDK uses unified .text attribute since v1.0.4
             anon_result = self._client.anonymize(doc)
-            clean_text = (
-                anon_result.anonymized_text
-                if hasattr(anon_result, "anonymized_text")
-                else getattr(anon_result, "text", doc)
-            )
+            clean_text = anon_result.text
 
             record = RedactionRecord(
                 document_index=idx,

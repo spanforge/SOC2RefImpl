@@ -8,6 +8,7 @@ without any network access or SpanForge cloud account.
 from __future__ import annotations
 
 import pytest
+from spanforge.testing_mocks import mock_all_services
 
 from soc2_refimpl.config import PipelineConfig
 from soc2_refimpl.pipeline import MockLLMBackend
@@ -123,3 +124,28 @@ def critical_pii_documents() -> list[str]:
 def utc_timestamp() -> str:
     """Return a fixed UTC timestamp for deterministic assertions."""
     return "2026-01-15T10:00:00+00:00"
+
+
+# ---------------------------------------------------------------------------
+# SpanForge service mock fixture (DX-003 — spanforge.testing_mocks)
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def sf_mocks():
+    """Context-managed mock for all SpanForge SDK service clients.
+
+    Replaces every SDK singleton (sf_pii, sf_audit, sf_secrets, sf_gate, etc.)
+    with an in-memory mock for the duration of the test.  Each mock records
+    all calls in ``.calls`` and returns sensible defaults without network I/O.
+
+    Usage::
+
+        def test_something(sf_mocks):
+            # all SDK calls are intercepted
+            handler = PIIHandler(base_config)
+            handler.process_documents(["Hello"])
+            assert sf_mocks.pii.calls  # verify calls were made
+    """
+    with mock_all_services() as mocks:
+        yield mocks

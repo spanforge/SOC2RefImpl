@@ -20,10 +20,7 @@ from collections import deque
 from dataclasses import dataclass, field
 from typing import Any
 
-from spanforge.sdk.observe import (  # type: ignore[import-untyped, attr-defined, no-untyped-def]
-    SFClientConfig,
-    SFObserveClient,
-)
+from spanforge.sdk.observe import SFObserveClient
 
 from soc2_refimpl.config import PipelineConfig
 
@@ -92,8 +89,7 @@ class AvailabilityMonitor:
         config: PipelineConfig,
         window_size: int = _WINDOW_SIZE,
     ) -> None:
-        sf_cfg: SFClientConfig = config.to_sf_client_config()  # type: ignore[assignment]
-        self._client = SFObserveClient(sf_cfg)
+        self._client: SFObserveClient = config.to_sf_factory().observe  # type: ignore[assignment]
         self._project_id = config.project_id
         self._otel_endpoint = config.otel_endpoint
         self._window: deque[_InvocationMetric] = deque(maxlen=window_size)
